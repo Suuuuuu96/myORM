@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="558cb8fe-390f-412a-8d25-2eb55e16dd7a" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://X:/My Program Files/Go1.16.6" />
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectId" id="1xAwlVeeFCpFHV7LtrzJ93OtkMP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunManager" selected="Go Build.go build myorm/test">
+    <configuration name="go build myorm/test" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="myorm01" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/test/main.go" />
+      <package value="myorm/test" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestClause_Build in myorm/clause" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="myorm01" />
+      <working_directory value="$PROJECT_DIR$/clause" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="myorm/clause" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestClause_Build\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestParse in myorm/schema" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="myorm01" />
+      <working_directory value="$PROJECT_DIR$/schema" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="myorm/schema" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestParse\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestSession_CreateTable in myorm/session" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="myorm01" />
+      <working_directory value="$PROJECT_DIR$/session" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="myorm/session" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestSession_CreateTable\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestSession_Insert in myorm/session" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="myorm01" />
+      <working_directory value="$PROJECT_DIR$/session" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="myorm/session" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestSession_Insert\E$" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.go build myorm/test" />
+      <item itemvalue="Go Test.TestParse in myorm/schema" />
+      <item itemvalue="Go Test.TestSession_CreateTable in myorm/session" />
+      <item itemvalue="Go Test.TestClause_Build in myorm/clause" />
+      <item itemvalue="Go Test.TestSession_Insert in myorm/session" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build myorm/test" />
+        <item itemvalue="Go Test.TestSession_Insert in myorm/session" />
+        <item itemvalue="Go Test.TestClause_Build in myorm/clause" />
+        <item itemvalue="Go Test.TestSession_CreateTable in myorm/session" />
+        <item itemvalue="Go Test.TestParse in myorm/schema" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
+</project>
