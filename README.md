@@ -6,10 +6,7 @@ myORM是一个Golang ORM框架。本框架的实现，参考了XORM、GORM和Gee
 * 记录（record，行数据）--> 对象（object）
 * 字段（field）--> 对象的属性（attribute）
 
-ORM 使用对象，封装了数据库操作，可以减少SQL语局的使用。开发者只使用面向对象编程，与数据对象直接交互，不用关心底层数据库。
-
-但是，ORM并不能完全取代SQL语句的使用。因为，对于复杂的查询，ORM 要么是无法表达，要么是性能不如原生的 SQL。
-
+ORM 使用对象，封装了数据库操作，可以减少SQL语局的使用。开发者只使用面向对象编程，与数据对象直接交互，不用关心底层数据库。但是，ORM并不能完全取代SQL语句的使用。因为，对于复杂的查询，ORM 要么是无法表达，要么是性能不如原生的 SQL。
 Golang并没有自带的ORM框架，比较流行的第三方框架有XORM、GORM等等。参考了XORM、GORM和GeeORM等框架，笔者也开发了一个简单的ORM框架——myORM，目前已具备了常见ORM需要的基础功能。
 ## 功能
 * 对象与表框架的映射：本框架能基于传入对象解析其结构体（struct），在数据库中建立同名的数据表，根据结构体的字段设置同名、对应类型的数据表字段（属性）。
@@ -24,7 +21,116 @@ Golang并没有自带的ORM框架，比较流行的第三方框架有XORM、GORM
 * Engine/引擎：用于连接数据库，一个引擎对应一个数据库。
 * Session/会话：用于操作数据表（包括建立/删除表格、执行SQL语句、建立事务），一个会话对应一个数据表。一个引擎可以对应多个会话。
 * Dialect/方言：不同的关系型数据库管理系统，使用的SQL语句可能有所不同。数据库的数据类型和Golang的数据类型也有差异（Golang的Int、Int8、Int16、Int32对应数据库的integer）。这些所有的差异均由Dialect来处理，之后各种操作均不需要考虑具体语言或数据的差异。一种数据库管理系统，对应一个方言。
-* generator/生成器：生成器负责生成SQL的各部分（如"WHERE ..."或"LIMIT ..."）。
-* Clause/分句：一个Clause就是一条SQL语句的各部分的集合。
 * Field/字段：包含列名、类型和注解。一个字段对应数据库中的一个属性（一列），
 * Schema/表框架：即数据表的组织和结构，包含程序中的对应模型、表名、各字段信息、全体列名。一个数据表对应一个表框架。
+* generator/生成器：生成器负责生成SQL的各部分（如"WHERE ..."或"LIMIT ..."）。
+* Clause/分句：一个Clause就是一条SQL语句的各部分的集合。
+## 样例程序
+```
+package main
+
+import (
+	"fmt"
+	"myorm"
+	"myorm/session"
+)
+
+//注意结构体里面，首字母大写才能被SQL识别到
+type USER struct {
+	Name string `myorm:"PRIMARY KEY"`
+	Age  int
+	School  string
+}
+
+func (u *USER)BeforeInsert(s *session.Session) error { //钩子函数：插入前
+	fmt.Println("调用BeforeInsert函数：即将插入",*u,"。")
+	return nil
+}
+
+func (u *USER)AfterInsert(s *session.Session) error { //钩子函数：插入后
+	fmt.Println("调用AfterInsert函数：插入即将完成。")
+	return nil
+}
+
+
+func main() {
+
+	// 1、声明并赋值几个实例
+	var (
+		user1 = &USER{"ou", 18,"CAU"}
+		user2 = &USER{"Sam", 25,"GU"}
+		user3 = &USER{"Amy", 21,"HU"}
+		user4 = &USER{"su", 21,"HU"}
+	)
+
+	// 2、新建一个连接数据库的引擎，数据库文件是同一目录下的newDB.db
+	en,_:=myorm.NewEngine("sqlite3","newDB.db")
+
+	// 3、新建一个会话，并根据一个空的USER对象创建表框架
+	s := en.NewSession().Model(&USER{})
+
+	// 4、如果已经存在USER表，则先删除
+	_ = s.DropTable()
+
+	// 5、建立USER表
+	_ = s.CreateTable()
+
+	// 6、向USER表插入2个实例
+	_, _ = s.Insert(user1, user2)
+
+	// 7、查询一共有几条记录
+	num,_ := s.Count()
+	fmt.Println("事务前记录个数：",num) //输出："事务前记录个数： 2"
+
+	// 8、新建一个事务（向USER表插入2个实例）
+	s,_,_ =s.Transaction(func(s0 *session.Session) (*session.Session,interface{}, error) {
+		_, _ = s0.Insert(user3,user4)
+		return s0, nil, nil
+		//return nil, errors.New("err")
+	})
+	num,_=s.Count()
+	fmt.Println("事务后记录个数：",num)  //输出："事务后记录个数： 4"
+
+	// 9、将Amy的年龄修改为30
+	_, _ = s.Where("Name = ?", "Amy").Update("Age", 30)
+
+	// 10、删除学校为"CAU"的学生并输出成功删除记录数
+	deleteNum,_:=s.Where("School=?","CAU").Delete()
+	fmt.Println("已删除",deleteNum,"条记录")  //输出："事务后记录个数： 4"
+
+	// 11、将名为"Amy"的记录追加到[]USER切片，且最多不超过三条记录（实际上只有一条，因为Name是主键）
+	var users []USER
+	_ = s.Where("Name = ?", "Amy").Limit(3).Find(&users)
+	fmt.Println(users) //输出："[{Amy 30 HU}]"
+
+	// 12、将年纪大于等于18的记录追加到[]USER切片，且最多不超过2条记录（符合条件的其实有三条）
+	_ = s.Where("Age>=?",18).Limit(2).Find(&users)
+	fmt.Println(users) //输出："[{Amy 30 HU} {Sam 25 GU} {Amy 30 HU}]"
+
+	// 13、查询年纪小于22的有几条记录（链式操作）
+	num2,_:=s.Where("Age<?",22).Count()
+
+	// 14、查询年纪大于等于18的有几条记录
+	s.Where("Age>=?",18)
+	num3,_:=s.Count()
+
+	// 15、查看查询结果
+	fmt.Println(num2,num3) //输出："1 3"
+
+}
+
+/*
+说明：
+直接执行Clear()的函数：Exec()、QueryRows()、QueryRow()
+间接执行Clear()的函数：Insert()、Find()、Update()、Delete()、Count()、First()
+不会执行Clear()的函数：Limit()、Where()、OrderBy()
+执行Clear()后，会话的SQL语句及其参数都会被清空。
+链式操作时，须注意使不会执行Clear()的函数在前面，其他在后面。
+
+
+ */
+```
+
+## 运行截图
+
+![image](https://github.com/Suuuuuu96/myORM/blob/main/img/orm1.png)
