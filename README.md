@@ -135,7 +135,7 @@ Hook 的意思是钩住，也就是在消息过去之前，先把消息钩住，
 例子：
 ```
 type Account struct {
-	ID       int `geeorm:"PRIMARY KEY"`
+	ID       int `myorm:"PRIMARY KEY"`
 	Password string
 }
 func (account *Account) BeforeInsert(s *Session) error {
