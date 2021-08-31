@@ -28,31 +28,25 @@ Golang并没有自带的ORM框架，比较流行的第三方框架有XORM、GORM
 ## 样例程序
 ```
 package main
-
 import (
 	"fmt"
 	"myorm"
 	"myorm/session"
 )
-
 //注意结构体里面，首字母大写才能被SQL识别到
 type USER struct {
 	Name string `myorm:"PRIMARY KEY"`
 	Age  int
 	School  string
 }
-
 func (u *USER)BeforeInsert(s *session.Session) error { //钩子函数：插入前
 	fmt.Println("调用BeforeInsert函数：即将插入",*u,"。")
 	return nil
 }
-
 func (u *USER)AfterInsert(s *session.Session) error { //钩子函数：插入后
 	fmt.Println("调用AfterInsert函数：插入即将完成。")
 	return nil
 }
-
-
 func main() {
 
 	// 1、声明并赋值几个实例
@@ -118,19 +112,15 @@ func main() {
 	fmt.Println(num2,num3) //输出："1 3"
 
 }
+```
 
-/*
 说明：
 直接执行Clear()的函数：Exec()、QueryRows()、QueryRow()
 间接执行Clear()的函数：Insert()、Find()、Update()、Delete()、Count()、First()
 不会执行Clear()的函数：Limit()、Where()、OrderBy()
 执行Clear()后，会话的SQL语句及其参数都会被清空。
 链式操作时，须注意使不会执行Clear()的函数在前面，其他在后面。
-
-
- */
-```
-
+ 
 ## 运行截图
 
 ![image](https://github.com/Suuuuuu96/myORM/blob/main/img/orm1.png)
