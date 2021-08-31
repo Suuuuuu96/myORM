@@ -114,12 +114,60 @@ func main() {
 }
 ```
 
-说明：<br>
+### 注意事项
+#### 函数执行顺序
 直接执行Clear()的函数：Exec()、QueryRows()、QueryRow()<br>
 间接执行Clear()的函数：Insert()、Find()、Update()、Delete()、Count()、First()<br>
 不会执行Clear()的函数：Limit()、Where()、OrderBy()<br>
 执行Clear()后，会话的SQL语句及其参数都会被清空。<br>
 链式操作时，须注意使不会执行Clear()的函数在前面，其他在后面。
+#### 事务的执行
+数据库事务(transaction)是访问并可能操作各种数据项的一个数据库操作序列，这些操作要么全部执行,要么全部不执行，是一个不可分割的工作单位。<br>
+事务由事务开始与事务结束之间执行的全部数据库操作组成。分三个阶段：开始；读写；提交或回滚。
+事务开始之后不断进行读写操作，但写操作仅仅将数据写入磁盘缓冲区，而非真正写入磁盘内。顺利完成所有操作则提交，数据保存到磁盘；否则回滚。<br>
+本框架中事务的实现有两种，分别是Session的method和Engine的的method。<br>
+
+#### 钩子函数
+Hook 的意思是钩住，也就是在消息过去之前，先把消息钩住，不让其传递，使用户可以优先处理。
+执行这种操作的函数也称为钩子函数。<br>
+“先钩住再处理”，执行某操作之前，优先处理一下，再决定后面的执行走向。<br>
+本框架可以让用户自定义8个钩子函数，分别在增删改查操作的前后发生。<br>
+例子：
+```
+type Account struct {
+	ID       int `geeorm:"PRIMARY KEY"`
+	Password string
+}
+func (account *Account) BeforeInsert(s *Session) error {
+	log.Info("before inert", account)
+	account.ID += 1000
+	return nil
+}
+func (account *Account) AfterQuery(s *Session) error {
+	log.Info("after query", account)
+	account.Password = "******"
+	return nil
+}
+```
+
+声明一个账号类，类有一个BeforeInsert函数，则在每次插入记录时均会调用该函数。<br>
+有一个AfterQuery函数，则在每次查询前均会调用该函数。<br>
+说明：<br>
+这些钩子函数必须是结构体（如Account）的对应method。<br>
+且函数格式必须是：<br>
+```
+func (指针名 *类名) 函数名(s *Session) error {
+	操作
+	return nil
+}
+```
+其中函数名必须是"BeforeQuery"、"AfterQuery"、"BeforeUpdate"、"AfterUpdate"、"BeforeDelete"、"AfterDelete"、"BeforeInsert"、"AfterInsert"之一。<br>
+接收且仅接收一个参数：对应的会话的指针。<br>
+用户可以根据自己的需要，利用获得的对应会话的指针，设置自己需要的操作（当然也可以不使用该会话）。<br>
+用户只能操作 Account指针 或 Session指针 ，不能返回值。<br>
+函数仅返回一个error。
+
+
  
 ## 运行截图
 
