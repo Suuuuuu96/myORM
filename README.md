@@ -33,7 +33,7 @@ import (
 	"myorm"
 	"myorm/session"
 )
-//注意结构体里面，首字母大写才能被SQL识别到
+//注意结构体里面，首字母大写才能被识别到
 type USER struct {
 	Name string `myorm:"PRIMARY KEY"`
 	Age  int
@@ -114,11 +114,11 @@ func main() {
 }
 ```
 
-说明：
-直接执行Clear()的函数：Exec()、QueryRows()、QueryRow()
-间接执行Clear()的函数：Insert()、Find()、Update()、Delete()、Count()、First()
-不会执行Clear()的函数：Limit()、Where()、OrderBy()
-执行Clear()后，会话的SQL语句及其参数都会被清空。
+说明：<br>
+直接执行Clear()的函数：Exec()、QueryRows()、QueryRow()<br>
+间接执行Clear()的函数：Insert()、Find()、Update()、Delete()、Count()、First()<br>
+不会执行Clear()的函数：Limit()、Where()、OrderBy()<br>
+执行Clear()后，会话的SQL语句及其参数都会被清空。<br>
 链式操作时，须注意使不会执行Clear()的函数在前面，其他在后面。
  
 ## 运行截图
